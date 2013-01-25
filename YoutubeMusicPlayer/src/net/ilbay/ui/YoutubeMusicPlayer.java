@@ -6,7 +6,7 @@ import java.net.URL;
 import net.ilbay.listener.CategoryAdditionListener;
 import net.ilbay.listener.ConfirmationDialogListener;
 import net.ilbay.listener.RenamePlaylistDialogListener;
-import net.ilbay.playlist.Category;
+import net.ilbay.playlist.Playlist;
 
 import org.apache.pivot.wtk.Action;
 import org.apache.pivot.beans.BXML;
@@ -54,7 +54,7 @@ public class YoutubeMusicPlayer implements Application{
 		if(window!=null){
 			window.close();
 		}
-		Category.disconnectFromDatabase();
+		Playlist.disconnectFromDatabase();
 		return false;
 	}
 
@@ -83,7 +83,7 @@ public class YoutubeMusicPlayer implements Application{
 					Alert.alert(category+" has already been added.",window);
 				}else{
 					categoryList.add(category);
-					Category.addCategory(category);
+					Playlist.addCategory(category);
 				}
 			}
 		});
@@ -141,7 +141,7 @@ public class YoutubeMusicPlayer implements Application{
 	
 	private void loadCategories(){
 		categoryListview.setListData(categoryList);
-		java.util.List<String> list=Category.getCategories();
+		java.util.List<String> list=Playlist.getCategories();
 		for(String category:list)
 			categoryList.add(category);
 	}
@@ -175,7 +175,7 @@ public class YoutubeMusicPlayer implements Application{
 						renamePlaylistDialog.addRenamePlaylistDialogListener(new RenamePlaylistDialogListener() {
 							@Override
 							public void playlistChanged(String newPlaylist) {
-								Category.renameCategory(selectedItem, newPlaylist);
+								Playlist.renameCategory(selectedItem, newPlaylist);
 								categoryList.update(selectedItemIndex, newPlaylist);
 							}
 						});
@@ -194,7 +194,7 @@ public class YoutubeMusicPlayer implements Application{
 							@Override
 							public void confirmed(){
 								categoryList.remove(selectedItem);
-								Category.deleteCategory(selectedItem);
+								Playlist.deleteCategory(selectedItem);
 							}
 						});
 					}

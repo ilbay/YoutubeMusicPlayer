@@ -13,7 +13,7 @@
 					<buttonPressListeners>
 						function buttonPressed(button){
 							playlistTextInput.setText("");
-							newPlaylistDialog.close();
+							renamePlaylistDialog.close();
 						}
 					</buttonPressListeners>
 				</PushButton>

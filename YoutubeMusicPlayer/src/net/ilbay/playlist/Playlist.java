@@ -10,8 +10,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Category{
-	public Category(){
+public class Playlist{
+	public Playlist(){
 		try{
 			connectToDatabase();
 		}catch(Exception e){
@@ -27,7 +27,7 @@ public class Category{
 				connectToDatabase();
 			
 			Statement stat = conn.createStatement();
-			ResultSet resultSet=stat.executeQuery("select name from CATEGORY");
+			ResultSet resultSet=stat.executeQuery("select name from PLAYLIST");
 			while(resultSet.next()){
 				categoryList.add(resultSet.getString("name"));
 			}
@@ -45,7 +45,7 @@ public class Category{
 	public static void addCategory(String category){
 		try {
 			Statement stat = conn.createStatement();
-			stat.execute("INSERT INTO CATEGORY(name) VALUES('"+category+"')");
+			stat.execute("INSERT INTO PLAYLIST(name) VALUES('"+category+"')");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,7 +55,7 @@ public class Category{
 	public static void deleteCategory(String category){
 		try {
 			Statement stat=conn.createStatement();
-			stat.execute("DELETE FROM CATEGORY WHERE name='"+category+"'");
+			stat.execute("DELETE FROM PLAYLIST WHERE name='"+category+"'");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,7 +65,7 @@ public class Category{
 	public static void renameCategory(String oldCategory,String newCategory){
 		try {
 			Statement stat=conn.createStatement();
-			stat.execute("UPDATE CATEGORY SET name='"+newCategory+"' WHERE name='"+oldCategory+"'");
+			stat.execute("UPDATE PLAYLIST SET name='"+newCategory+"' WHERE name='"+oldCategory+"'");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

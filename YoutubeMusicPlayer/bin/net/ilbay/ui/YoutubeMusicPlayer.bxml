@@ -85,12 +85,13 @@
    								<TableView bxml:id="tableView">
    									<columns>
    										<TableView.Column name="no" width="100" headerData="#"/>
-   										<TableView.Column name="name" width="100" headerData="Name"/>
+   										<TableView.Column name="title" width="100" headerData="Title"/>
+   										<TableView.Column name="genre" width="100" headerData="Genre"/>
    										<TableView.Column name="artist" width="100" headerData="Artist"/>
    										<TableView.Column name="time" headerData="Time"/>
    									</columns>
    								
-   									<collections:HashMap no="1" name="Bratja" artist="fma" time="04:11"/>
+   									<collections:HashMap no="1" title="Bratja" artist="fma" time="04:11"/>
    								</TableView>
     								<columnHeader>
     									<TableViewHeader tableView="$tableView"/>
