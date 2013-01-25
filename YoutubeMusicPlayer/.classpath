@@ -2,16 +2,16 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="/home/ilbay/workspace/YoutubeMusicPlayer/lib/IBMPlayerForMpeg4SDK.jar"/>
-	<classpathentry kind="lib" path="/home/ilbay/workspace/YoutubeMusicPlayer/lib/pivot-charts-2.0.2.jar"/>
-	<classpathentry kind="lib" path="/home/ilbay/workspace/YoutubeMusicPlayer/lib/pivot-core-2.0.2.jar"/>
-	<classpathentry kind="lib" path="/home/ilbay/workspace/YoutubeMusicPlayer/lib/pivot-web-2.0.2.jar"/>
-	<classpathentry kind="lib" path="/home/ilbay/workspace/YoutubeMusicPlayer/lib/pivot-web-server-2.0.2.jar"/>
-	<classpathentry kind="lib" path="/home/ilbay/workspace/YoutubeMusicPlayer/lib/pivot-wtk-2.0.2.jar"/>
-	<classpathentry kind="lib" path="/home/ilbay/workspace/YoutubeMusicPlayer/lib/pivot-wtk-terra-2.0.2.jar"/>
-	<classpathentry kind="lib" path="/home/ilbay/workspace/YoutubeMusicPlayer/lib/httpclient-4.2.3.jar"/>
-	<classpathentry kind="lib" path="/home/ilbay/workspace/YoutubeMusicPlayer/lib/httpclient-cache-4.2.3.jar"/>
-	<classpathentry kind="lib" path="/home/ilbay/workspace/YoutubeMusicPlayer/lib/httpcore-4.2.2.jar"/>
-	<classpathentry kind="lib" path="/home/ilbay/workspace/YoutubeMusicPlayer/lib/sqlite-jdbc-3.6.19.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/httpclient-4.2.3.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/httpclient-cache-4.2.3.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/httpcore-4.2.2.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/IBMPlayerForMpeg4SDK.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/pivot-charts-2.0.2.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/pivot-core-2.0.2.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/pivot-web-2.0.2.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/pivot-web-server-2.0.2.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/pivot-wtk-2.0.2.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/pivot-wtk-terra-2.0.2.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/sqlite-jdbc-3.6.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
