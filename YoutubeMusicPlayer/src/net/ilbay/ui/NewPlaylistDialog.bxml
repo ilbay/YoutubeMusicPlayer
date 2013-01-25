@@ -1,0 +1,22 @@
+<dialogs:NewPlaylistDialog bxml:id="newPlaylistDialog" title="Dialog" modal="true" width="100" height="100"
+    xmlns:bxml="http://pivot.apache.org/bxml"
+    xmlns:dialogs="net.ilbay.ui"
+    xmlns="org.apache.pivot.wtk">
+		<BoxPane orientation="vertical" styles="{padding:4}">
+			<BoxPane>
+				<Label text="Playlist:"/>
+				<TextInput bxml:id="playlistTextInput"/>
+			</BoxPane>
+			<BoxPane styles="{horizontalAlignment:'right'}">
+				<PushButton	bxml:id="okButton" buttonData="OK"/>
+				<PushButton bxml:id="cancelButton" buttonData="Cancel">
+					<buttonPressListeners>
+						function buttonPressed(button){
+							playlistTextInput.setText("");
+							newPlaylistDialog.close();
+						}
+					</buttonPressListeners>
+				</PushButton>
+			</BoxPane>
+		</BoxPane>
+</dialogs:NewPlaylistDialog>

@@ -1,0 +1,105 @@
+<Window title="Youtube Music Player 0.1" bxml:id="youtubeMusicPlayer" maximized="true"
+    xmlns:bxml="http://pivot.apache.org/bxml"
+    xmlns:content="org.apache.pivot.wtk.content"
+    xmlns:collections="org.apache.pivot.collections"
+    xmlns:menus="org.apache.pivot.tutorials.menus"
+    xmlns="org.apache.pivot.wtk">
+    
+    <bxml:define>
+		<bxml:include bxml:id="newPlaylistDialog" src="NewPlaylistDialog.bxml"/>
+		<bxml:include bxml:id="confirmationDialog" src="ConfirmationDialog.bxml"/>
+		<bxml:include bxml:id="renamePlaylistDialog" src="RenamePlaylistDialog.bxml"/>
+	</bxml:define>
+    
+    <Border styles="{color:10}">
+    	<TablePane>
+			<columns>
+    			<TablePane.Column width="1*"/>
+    		</columns>
+    		<TablePane.Row height="-1">
+        		<MenuBar>
+    				<MenuBar.Item buttonData="Media">
+    					<Menu>
+    						<Menu.Section>
+    							<Menu.Item buttonData="New Playlist" action="newPlaylist">
+    							</Menu.Item>
+	   						</Menu.Section>
+	   						<Menu.Section>
+	   						    <Menu.Item buttonData="Import Playlist">
+    							</Menu.Item>
+    							<Menu.Item buttonData="Import Online Media">
+    							</Menu.Item>
+	   						</Menu.Section>
+	   						<Menu.Section>
+	   							<Menu.Item buttonData="Export Playlist"/>
+	   						</Menu.Section>
+    					</Menu>
+    				</MenuBar.Item>
+    				<MenuBar.Item buttonData="Help">
+    					<Menu>
+    						<Menu.Section>
+    							<Menu.Item buttonData="About">
+    							</Menu.Item>
+    						</Menu.Section>
+    						<Menu.Section>
+    							<Menu.Item buttonData="Help">
+    							</Menu.Item>
+    						</Menu.Section>
+    					</Menu>
+    				</MenuBar.Item>
+    			</MenuBar>
+    		</TablePane.Row>
+    		<TablePane.Row height="-1">
+    			<BoxPane>
+    				<LinkButton bxml:id="playButton">
+    					<content:ButtonData icon="/icon/button_grey_play.png"/>
+    				</LinkButton>
+    				<LinkButton bxml:id="stopButton">
+    					<content:ButtonData icon="/icon/button_grey_stop.png"/>
+    				</LinkButton>
+    				<BoxPane orientation="vertical" styles="{verticalAlignment:'center',horizontalAlignment:'center'}">
+    					<Label/>
+    					<Slider value="0"/>
+    					<Label text="tugay"/>
+    				</BoxPane>
+    				<LinkButton bxml:id="soundButton">
+    					<content:ButtonData icon="/icon/sound.png"/>
+    				</LinkButton>
+    			</BoxPane>
+    		</TablePane.Row>
+    		<TablePane.Row height="1*">
+    			<TablePane styles="{horizontalSpacing:0}">
+    				<columns>
+	    				<TablePane.Column width="-1"/>
+	    				<TablePane.Column width="1*"/>
+	    			</columns>
+	    			<TablePane.Row height="1*">
+	    				<Border styles="{color:10}">
+		    				<ScrollPane horizontalScrollBarPolicy="fill" verticalScrollBarPolicy="fill_to_capacity">
+		    					<ListView preferredWidth="160" bxml:id="categoryListview">
+	    						</ListView>
+	    					</ScrollPane>
+	    				</Border>
+   						<Border styles="{color:10}">
+   							<ScrollPane horizontalScrollBarPolicy="fill" verticalScrollBarPolicy="fill_to_capacity">
+   								<TableView bxml:id="tableView">
+   									<columns>
+   										<TableView.Column name="no" width="100" headerData="#"/>
+   										<TableView.Column name="name" width="100" headerData="Name"/>
+   										<TableView.Column name="artist" width="100" headerData="Artist"/>
+   										<TableView.Column name="time" headerData="Time"/>
+   									</columns>
+   								
+   									<collections:HashMap no="1" name="Bratja" artist="fma" time="04:11"/>
+   								</TableView>
+    								<columnHeader>
+    									<TableViewHeader tableView="$tableView"/>
+    								</columnHeader>
+   							</ScrollPane>
+	    				</Border>
+	    			</TablePane.Row>
+    			</TablePane>
+    		</TablePane.Row>
+    	</TablePane>
+    </Border>
+</Window>

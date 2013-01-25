@@ -1,0 +1,13 @@
+<dialogs:ConfirmationDialog bxml:id="confirmationDialog" title="Warning" modal="true" width="100" height="100"
+    xmlns:bxml="http://pivot.apache.org/bxml"
+    xmlns:dialogs="net.ilbay.ui"
+    xmlns="org.apache.pivot.wtk">
+	
+	<BoxPane orientation="vertical" styles="{padding:8}">
+		<Label bxml:id="content"/>
+		<BoxPane>
+			<PushButton bxml:id="okButton" buttonData="OK"/>
+			<PushButton bxml:id="cancelButton" buttonData="Cancel"/>
+		</BoxPane>
+	</BoxPane>
+</dialogs:ConfirmationDialog>
