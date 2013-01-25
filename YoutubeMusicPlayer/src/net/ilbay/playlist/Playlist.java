@@ -21,7 +21,7 @@ public class Playlist{
 	}
 	
 	public static List<String> getCategories(){
-		List<String> categoryList=new ArrayList<String>();
+		List<String> playList=new ArrayList<String>();
 		try {
 			if(conn==null)
 				connectToDatabase();
@@ -29,7 +29,7 @@ public class Playlist{
 			Statement stat = conn.createStatement();
 			ResultSet resultSet=stat.executeQuery("select name from PLAYLIST");
 			while(resultSet.next()){
-				categoryList.add(resultSet.getString("name"));
+				playList.add(resultSet.getString("name"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -39,33 +39,33 @@ public class Playlist{
 			e.printStackTrace();
 		}
 		
-		return categoryList;
+		return playList;
 	}
 	
-	public static void addCategory(String category){
+	public static void addPlaylist(String playlist){
 		try {
 			Statement stat = conn.createStatement();
-			stat.execute("INSERT INTO PLAYLIST(name) VALUES('"+category+"')");
+			stat.execute("INSERT INTO PLAYLIST(name) VALUES('"+playlist+"')");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public static void deleteCategory(String category){
+	public static void deletePlaylist(String playlist){
 		try {
 			Statement stat=conn.createStatement();
-			stat.execute("DELETE FROM PLAYLIST WHERE name='"+category+"'");
+			stat.execute("DELETE FROM PLAYLIST WHERE name='"+playlist+"'");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public static void renameCategory(String oldCategory,String newCategory){
+	public static void renamePlaylist(String oldPlaylist,String newPlaylist){
 		try {
 			Statement stat=conn.createStatement();
-			stat.execute("UPDATE PLAYLIST SET name='"+newCategory+"' WHERE name='"+oldCategory+"'");
+			stat.execute("UPDATE PLAYLIST SET name='"+newPlaylist+"' WHERE name='"+oldPlaylist+"'");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

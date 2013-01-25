@@ -83,7 +83,7 @@ public class YoutubeMusicPlayer implements Application{
 					Alert.alert(category+" has already been added.",window);
 				}else{
 					categoryList.add(category);
-					Playlist.addCategory(category);
+					Playlist.addPlaylist(category);
 				}
 			}
 		});
@@ -175,7 +175,7 @@ public class YoutubeMusicPlayer implements Application{
 						renamePlaylistDialog.addRenamePlaylistDialogListener(new RenamePlaylistDialogListener() {
 							@Override
 							public void playlistChanged(String newPlaylist) {
-								Playlist.renameCategory(selectedItem, newPlaylist);
+								Playlist.renamePlaylist(selectedItem, newPlaylist);
 								categoryList.update(selectedItemIndex, newPlaylist);
 							}
 						});
@@ -194,7 +194,7 @@ public class YoutubeMusicPlayer implements Application{
 							@Override
 							public void confirmed(){
 								categoryList.remove(selectedItem);
-								Playlist.deleteCategory(selectedItem);
+								Playlist.deletePlaylist(selectedItem);
 							}
 						});
 					}
