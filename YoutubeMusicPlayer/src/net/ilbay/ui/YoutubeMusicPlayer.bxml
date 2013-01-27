@@ -6,9 +6,10 @@
     xmlns="org.apache.pivot.wtk">
     
     <bxml:define>
-		<bxml:include bxml:id="newPlaylistDialog" src="NewPlaylistDialog.bxml"/>
+		<bxml:include bxml:id="newPlaylistDialog" src="playlistdialog/NewPlaylistDialog.bxml"/>
 		<bxml:include bxml:id="confirmationDialog" src="ConfirmationDialog.bxml"/>
-		<bxml:include bxml:id="renamePlaylistDialog" src="RenamePlaylistDialog.bxml"/>
+		<bxml:include bxml:id="renamePlaylistDialog" src="playlistdialog/RenamePlaylistDialog.bxml"/>
+		<bxml:include bxml:id="importOnlineMediaDialog" src="ImportOnlineMediaDialog.bxml"/>
 	</bxml:define>
     
     <Border styles="{color:10}">
@@ -27,7 +28,7 @@
 	   						<Menu.Section>
 	   						    <Menu.Item buttonData="Import Playlist">
     							</Menu.Item>
-    							<Menu.Item buttonData="Import Online Media">
+    							<Menu.Item buttonData="Import Online Media" action="importOnlineMedia">
     							</Menu.Item>
 	   						</Menu.Section>
 	   						<Menu.Section>
@@ -76,7 +77,7 @@
 	    			<TablePane.Row height="1*">
 	    				<Border styles="{color:10}">
 		    				<ScrollPane horizontalScrollBarPolicy="fill" verticalScrollBarPolicy="fill_to_capacity">
-		    					<ListView preferredWidth="160" bxml:id="categoryListview">
+		    					<ListView preferredWidth="160" bxml:id="playlistListView">
 	    						</ListView>
 	    					</ScrollPane>
 	    				</Border>

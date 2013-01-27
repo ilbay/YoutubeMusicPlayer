@@ -7,6 +7,8 @@ import net.ilbay.listener.CategoryAdditionListener;
 import net.ilbay.listener.ConfirmationDialogListener;
 import net.ilbay.listener.RenamePlaylistDialogListener;
 import net.ilbay.playlist.Playlist;
+import net.ilbay.ui.playlistdialog.NewPlaylistDialog;
+import net.ilbay.ui.playlistdialog.RenamePlaylistDialog;
 
 import org.apache.pivot.wtk.Action;
 import org.apache.pivot.beans.BXML;
@@ -70,7 +72,7 @@ public class YoutubeMusicPlayer implements Application{
 		window=(Window)bxmlSerializer.readObject(YoutubeMusicPlayer.class, "YoutubeMusicPlayer.bxml");
 		bxmlSerializer.bind(this, YoutubeMusicPlayer.class);
 				
-		categoryList=new ArrayList<String>();
+		playlistList=new ArrayList<String>();
 		
 		buttonActions();
 		loadCategories();
@@ -79,10 +81,10 @@ public class YoutubeMusicPlayer implements Application{
 		newPlaylistDialog.addCategoryAdditionListener(new CategoryAdditionListener() {			
 			@Override
 			public void categoryAdded(String category) {
-				if(categoryList.indexOf(category)!=-1){
+				if(playlistList.indexOf(category)!=-1){
 					Alert.alert(category+" has already been added.",window);
 				}else{
-					categoryList.add(category);
+					playlistList.add(category);
 					Playlist.addPlaylist(category);
 				}
 			}
@@ -140,10 +142,10 @@ public class YoutubeMusicPlayer implements Application{
 	}
 	
 	private void loadCategories(){
-		categoryListview.setListData(categoryList);
+		playlistListView.setListData(playlistList);
 		java.util.List<String> list=Playlist.getCategories();
 		for(String category:list)
-			categoryList.add(category);
+			playlistList.add(category);
 	}
 	
 	private void createMenuActions(){
@@ -154,12 +156,19 @@ public class YoutubeMusicPlayer implements Application{
 				newPlaylistDialog.open(window);
 			}
 		});
+		
+		Action.getNamedActions().put("importOnlineMedia", new Action(){
+			@Override
+			public void perform(Component arg0) {
+				importOnlineMediaDialog.open(window);
+			}			
+		});
 	}
 	
 	private void createContextMenuForCategory(){
-		categoryListview.setMenuHandler(new MenuHandler.Adapter(){
+		playlistListView.setMenuHandler(new MenuHandler.Adapter(){
 			public boolean configureContextMenu(Component component, Menu menu, int x, int y ){
-				final int selectedItemIndex=categoryListview.getItemAt(y);
+				final int selectedItemIndex=playlistListView.getItemAt(y);
 				if(selectedItemIndex==-1)
 					return false;
 				
@@ -171,12 +180,12 @@ public class YoutubeMusicPlayer implements Application{
 				renameMenuItem.setAction(new Action(){
 					@Override
 					public void perform(Component arg0){
-						final String selectedItem=categoryList.get(selectedItemIndex);
+						final String selectedItem=playlistList.get(selectedItemIndex);
 						renamePlaylistDialog.addRenamePlaylistDialogListener(new RenamePlaylistDialogListener() {
 							@Override
 							public void playlistChanged(String newPlaylist) {
 								Playlist.renamePlaylist(selectedItem, newPlaylist);
-								categoryList.update(selectedItemIndex, newPlaylist);
+								playlistList.update(selectedItemIndex, newPlaylist);
 							}
 						});
 						renamePlaylistDialog.open(window, selectedItem);
@@ -188,12 +197,12 @@ public class YoutubeMusicPlayer implements Application{
 				deleteMenuItem.setAction(new Action(){
 					@Override
 					public void perform(Component arg0) {
-						final String selectedItem=categoryList.get(selectedItemIndex);
+						final String selectedItem=playlistList.get(selectedItemIndex);
 						String errorMessage="Are you sure you want to remove "+selectedItem+" playlist?";
 						confirmationDialog.open(window,errorMessage,new ConfirmationDialogListener(){
 							@Override
 							public void confirmed(){
-								categoryList.remove(selectedItem);
+								playlistList.remove(selectedItem);
 								Playlist.deletePlaylist(selectedItem);
 							}
 						});
@@ -209,7 +218,7 @@ public class YoutubeMusicPlayer implements Application{
 	
 	private Window window;
 	private PlayerControl playerControl;
-	private List<String> categoryList;
+	private List<String> playlistList;
 	
 	private @BXML LinkButton playButton;
 	private @BXML LinkButton stopButton;
@@ -218,6 +227,7 @@ public class YoutubeMusicPlayer implements Application{
 	private @BXML NewPlaylistDialog newPlaylistDialog;	
 	private @BXML ConfirmationDialog confirmationDialog;
 	private @BXML RenamePlaylistDialog renamePlaylistDialog;
+	private @BXML ImportOnlineMediaDialog importOnlineMediaDialog;
 	
-	private @BXML ListView categoryListview;
+	private @BXML ListView playlistListView;
 }
