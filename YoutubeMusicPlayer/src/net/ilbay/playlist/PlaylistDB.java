@@ -10,8 +10,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Playlist{
-	public Playlist(){
+public class PlaylistDB{
+	public PlaylistDB(){
 		try{
 			connectToDatabase();
 		}catch(Exception e){
@@ -20,7 +20,7 @@ public class Playlist{
 		}
 	}
 	
-	public static List<String> getCategories(){
+	public static List<String> getPlaylist(){
 		List<String> playList=new ArrayList<String>();
 		try {
 			if(conn==null)
@@ -44,30 +44,42 @@ public class Playlist{
 	
 	public static void addPlaylist(String playlist){
 		try {
+			if(conn==null)
+				connectToDatabase();
 			Statement stat = conn.createStatement();
 			stat.execute("INSERT INTO PLAYLIST(name) VALUES('"+playlist+"')");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch(ClassNotFoundException e){
 			e.printStackTrace();
 		}
 	}
 	
 	public static void deletePlaylist(String playlist){
 		try {
+			if(conn==null)
+				connectToDatabase();
 			Statement stat=conn.createStatement();
 			stat.execute("DELETE FROM PLAYLIST WHERE name='"+playlist+"'");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch(ClassNotFoundException e){
 			e.printStackTrace();
 		}
 	}
 	
 	public static void renamePlaylist(String oldPlaylist,String newPlaylist){
 		try {
+			if(conn==null)
+				connectToDatabase();
 			Statement stat=conn.createStatement();
 			stat.execute("UPDATE PLAYLIST SET name='"+newPlaylist+"' WHERE name='"+oldPlaylist+"'");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch(ClassNotFoundException e){
 			e.printStackTrace();
 		}
 	}

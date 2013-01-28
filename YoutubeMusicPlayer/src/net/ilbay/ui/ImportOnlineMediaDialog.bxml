@@ -1,0 +1,31 @@
+<dialogs:ImportOnlineMediaDialog title="Import Online Media" modal="true" width="100" height="100"
+    xmlns:bxml="http://pivot.apache.org/bxml"
+    xmlns:dialogs="net.ilbay.ui"
+    xmlns="org.apache.pivot.wtk">
+	
+	<BoxPane orientation="vertical" styles="{padding:8}">
+		<BoxPane>
+			<Label text="Video Id"/>
+			<TextInput bxml:id="videoIdTextInput"/>
+			<ActivityIndicator bxml:id="activityIndicator" preferredWidth="24" preferredHeight="24"/>
+		</BoxPane>
+		<PushButton bxml:id="loadMusicInfoButton" buttonData="OK"/>
+		<Border bxml:id="musicInfoBorder" title="Music Info" styles="{padding:8}">
+			<BoxPane orientation="vertical">
+				<BoxPane>
+					<Label text="Title"/>
+					<TextInput bxml:id="titleTextInput"/>
+				</BoxPane>
+				<BoxPane>
+					<Label text="Artist"/>
+					<TextInput bxml:id="artistTextInput"/>
+				</BoxPane>
+				<BoxPane>
+					<Label text="Genre"/>
+					<TextInput bxml:id="genreTextInput"/>
+				</BoxPane>
+				<PushButton bxml:id="okButton" buttonData="OK"/>
+			</BoxPane>
+		</Border>
+	</BoxPane>
+</dialogs:ImportOnlineMediaDialog>
