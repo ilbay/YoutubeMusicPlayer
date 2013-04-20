@@ -6,6 +6,7 @@ import java.net.URL;
 import net.ilbay.listener.CategoryAdditionListener;
 import net.ilbay.listener.ConfirmationDialogListener;
 import net.ilbay.listener.RenamePlaylistDialogListener;
+import net.ilbay.playlist.MusicDB;
 import net.ilbay.playlist.PlaylistDB;
 import net.ilbay.ui.playlistdialog.NewPlaylistDialog;
 import net.ilbay.ui.playlistdialog.RenamePlaylistDialog;
@@ -57,6 +58,7 @@ public class YoutubeMusicPlayer implements Application{
 			window.close();
 		}
 		PlaylistDB.disconnectFromDatabase();
+		MusicDB.disconnectFromDatabase();
 		return false;
 	}
 

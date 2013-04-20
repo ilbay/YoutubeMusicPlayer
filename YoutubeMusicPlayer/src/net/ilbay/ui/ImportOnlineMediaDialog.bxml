@@ -11,21 +11,31 @@
 		</BoxPane>
 		<PushButton bxml:id="loadMusicInfoButton" buttonData="OK"/>
 		<Border bxml:id="musicInfoBorder" title="Music Info" styles="{padding:8}">
-			<BoxPane orientation="vertical">
-				<BoxPane>
-					<Label text="Title"/>
-					<TextInput bxml:id="titleTextInput"/>
-				</BoxPane>
-				<BoxPane>
-					<Label text="Artist"/>
-					<TextInput bxml:id="artistTextInput"/>
-				</BoxPane>
-				<BoxPane>
-					<Label text="Genre"/>
-					<TextInput bxml:id="genreTextInput"/>
-				</BoxPane>
-				<PushButton bxml:id="okButton" buttonData="OK"/>
-			</BoxPane>
+		    <TablePane bxml:id="tablePane" styles="{verticalSpacing:1, showHorizontalGridLines:false,horizontalSpacing:1, showVerticalGridLines:false}">
+		    	<columns>
+		    		<TablePane.Column width="-1"/>
+		    		<TablePane.Column width="1*"/>
+		    	</columns>
+		    	
+		    	<TablePane.Row>
+		    		<Label text="Title:"/>
+		    		<TextInput bxml:id="titleTextInput"/>
+		    	</TablePane.Row>
+		    	
+		    	<TablePane.Row>
+		    		<Label text="Artist:"/>
+		    		<TextInput bxml:id="artistTextInput"/>
+		    	</TablePane.Row>
+		    	
+		    	<TablePane.Row>
+		    		<Label text="Genre:"/>
+		    		<TextInput bxml:id="genreTextInput"/>
+		    	</TablePane.Row>
+		    	
+		    	<TablePane.Row>
+		    		<PushButton bxml:id="saveButton" buttonData="Save"/>
+		    	</TablePane.Row>
+		    </TablePane>
 		</Border>
 	</BoxPane>
 </dialogs:ImportOnlineMediaDialog>

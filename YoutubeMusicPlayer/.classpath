@@ -13,5 +13,7 @@
 	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/pivot-wtk-2.0.2.jar"/>
 	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/pivot-wtk-terra-2.0.2.jar"/>
 	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/sqlite-jdbc-3.6.19.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

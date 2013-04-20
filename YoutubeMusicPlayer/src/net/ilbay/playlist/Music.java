@@ -41,9 +41,18 @@ public class Music{
 		this.id = id;
 	}
 	
+	public String getVideoId() {
+		return videoId;
+	}
+
+	public void setVideoId(String videoId) {
+		this.videoId = videoId;
+	}
+
 	private String title;
 	private String artist;
 	private String time;
 	private String genre;
 	private int id;
+	private String videoId;
 }

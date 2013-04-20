@@ -17,11 +17,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.net.URLEncoder;
 import java.net.URLDecoder;
@@ -44,7 +39,7 @@ import org.apache.http.protocol.HttpContext;
 
 public class YoutubeVideoDownloader implements Downloader{
 	public static void main(String[] args){
-		YoutubeVideoDownloader yvd=new YoutubeVideoDownloader("3PUnLWSLBR0");
+		YoutubeVideoDownloader yvd=new YoutubeVideoDownloader("VnfpsVpUw4A");
 		yvd.getVideoInfo();
 		yvd.saveVideo();
 	}
@@ -69,7 +64,6 @@ public class YoutubeVideoDownloader implements Downloader{
 			HttpGet httpget = new HttpGet(uri);
 			httpget.setHeader("User-Agent", userAgent);
 
-			log.finer("Executing " + uri);
 			HttpResponse response = httpclient.execute(httpget, localContext);
 			HttpEntity entity = response.getEntity();
 			if (entity != null && response.getStatusLine().getStatusCode() == 200) {
@@ -195,5 +189,4 @@ public class YoutubeVideoDownloader implements Downloader{
 	
 	private String videoId;
 	private VideoInfo videoInfo;
-	private Logger log=Logger.getLogger(YoutubeVideoDownloader.class.getCanonicalName());
 }

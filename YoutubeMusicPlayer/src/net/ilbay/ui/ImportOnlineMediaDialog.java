@@ -2,17 +2,26 @@ package net.ilbay.ui;
 
 import java.net.URL;
 
+import net.ilbay.downloader.Downloader;
+import net.ilbay.downloader.VideoInfo;
+import net.ilbay.downloader.YoutubeVideoDownloader;
+
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.Map;
 import org.apache.pivot.util.Resources;
+import org.apache.pivot.util.concurrent.Task;
+import org.apache.pivot.util.concurrent.TaskExecutionException;
 import org.apache.pivot.wtk.ActivityIndicator;
+import org.apache.pivot.wtk.ApplicationContext;
 import org.apache.pivot.wtk.Border;
 import org.apache.pivot.wtk.Button;
 import org.apache.pivot.wtk.ButtonPressListener;
 import org.apache.pivot.wtk.Dialog;
 import org.apache.pivot.wtk.PushButton;
 import org.apache.pivot.wtk.TextInput;
+import org.apache.pivot.wtk.TaskAdapter;
+import org.apache.pivot.util.concurrent.TaskListener;
 
 public class ImportOnlineMediaDialog extends Dialog implements Bindable{
 	@Override
@@ -22,15 +31,48 @@ public class ImportOnlineMediaDialog extends Dialog implements Bindable{
 		loadMusicInfoButton.getButtonPressListeners().add(new ButtonPressListener() {
 			@Override
 			public void buttonPressed(Button arg0) {
-				changeInputState(false);
-				activityIndicator.setActive(true);
+				final String videoId=videoIdTextInput.getText();
+				if(!videoId.isEmpty()){
+					changeInputState(false);
+					activityIndicator.setActive(true);
+					
+					Task<String> downloadTask=new Task<String>(){
+						@Override
+						public String execute() throws TaskExecutionException {
+							Downloader downloader=new YoutubeVideoDownloader(videoId);
+							VideoInfo videoInfo=downloader.getVideoInfo();
+							return videoInfo.getVideoTitle();
+						}
+					};
+					
+					
+					TaskListener<String> taskListener=new TaskListener<String>(){
+						@Override
+						public void executeFailed(Task<String> arg0) {
+							activityIndicator.setActive(false);
+							changeInputState(true);
+							System.out.println(arg0.getFault());
+						}
+
+						@Override
+						public void taskExecuted(Task<String> arg0) {
+							changeInputState(true);
+							titleTextInput.setText(arg0.getResult());
+							activityIndicator.setActive(false);
+							musicInfoBorder.setVisible(true);
+						}
+
+					};
+					downloadTask.execute(new TaskAdapter<String>(taskListener));
+				}
 			}
 		});
 		
-		okButton.getButtonPressListeners().add(new ButtonPressListener() {
+		saveButton.getButtonPressListeners().add(new ButtonPressListener() {
 			@Override
-			public void buttonPressed(Button arg0) {
-				
+			public void buttonPressed(Button arg0){
+				Downloader downloader=new YoutubeVideoDownloader(titleTextInput.getText());
+				downloader.saveVideo();
 			}
 		});
 	}
@@ -41,18 +83,18 @@ public class ImportOnlineMediaDialog extends Dialog implements Bindable{
 		titleTextInput.setEnabled(isEnabled);
 		artistTextInput.setEnabled(isEnabled);
 		genreTextInput.setEnabled(isEnabled);
-		okButton.setEnabled(isEnabled);
+		saveButton.setEnabled(isEnabled);
 	}
+		
+	private @BXML PushButton saveButton;
+	private @BXML PushButton loadMusicInfoButton;
 	
-	@BXML PushButton okButton;
-	@BXML PushButton loadMusicInfoButton;
+	private @BXML TextInput videoIdTextInput;
+	private @BXML TextInput titleTextInput;
+	private @BXML TextInput artistTextInput;
+	private @BXML TextInput genreTextInput;
 	
-	@BXML TextInput videoIdTextInput;
-	@BXML TextInput titleTextInput;
-	@BXML TextInput artistTextInput;
-	@BXML TextInput genreTextInput;
+	private @BXML ActivityIndicator activityIndicator;
 	
-	@BXML ActivityIndicator activityIndicator;
-	
-	@BXML Border musicInfoBorder;
+	private @BXML Border musicInfoBorder;
 }
