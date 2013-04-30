@@ -41,7 +41,7 @@ public class YoutubeVideoDownloader implements Downloader{
 	public static void main(String[] args){
 		YoutubeVideoDownloader yvd=new YoutubeVideoDownloader("VnfpsVpUw4A");
 		yvd.getVideoInfo();
-		yvd.saveVideo();
+		//yvd.saveVideo();
 	}
 	
 	public YoutubeVideoDownloader(String videoId){
@@ -99,8 +99,6 @@ public class YoutubeVideoDownloader implements Downloader{
 					}
 				}
 			}
-
-			System.out.println(uri);
 		} catch (UnsupportedEncodingException e){
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -130,11 +128,18 @@ public class YoutubeVideoDownloader implements Downloader{
 			
 			HttpResponse response = httpclient.execute(httpget, localContext);
 			HttpEntity entity = response.getEntity();
+			
 			if (entity != null && response.getStatusLine().getStatusCode() == 200) {
 				InputStream instream = entity.getContent();
-				File file=new File("./"+videoInfo.getVideoTitle()+".mp4");
+				
+				File musicFolder=new File("music");
+				if(!musicFolder.exists())
+					musicFolder.mkdir();
+				
+				File file=new File("music/"+videoInfo.getVideoId()+".mp4");
 				if(file.exists())
 					file.delete();
+
 				FileOutputStream fileOutputStream=new FileOutputStream(file);
 				
 				byte buffer[]=new byte[1024];

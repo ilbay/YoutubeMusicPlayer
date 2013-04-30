@@ -6,7 +6,9 @@ import java.net.URL;
 import net.ilbay.listener.CategoryAdditionListener;
 import net.ilbay.listener.ConfirmationDialogListener;
 import net.ilbay.listener.RenamePlaylistDialogListener;
+import net.ilbay.playlist.Music;
 import net.ilbay.playlist.MusicDB;
+import net.ilbay.playlist.Playlist;
 import net.ilbay.playlist.PlaylistDB;
 import net.ilbay.ui.playlistdialog.NewPlaylistDialog;
 import net.ilbay.ui.playlistdialog.RenamePlaylistDialog;
@@ -15,6 +17,7 @@ import org.apache.pivot.wtk.Action;
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.BXMLSerializer;
 import org.apache.pivot.collections.ArrayList;
+import org.apache.pivot.collections.HashMap;
 import org.apache.pivot.collections.List;
 import org.apache.pivot.collections.Map;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
@@ -34,14 +37,13 @@ import org.apache.pivot.wtk.MenuBar;
 import org.apache.pivot.wtk.MenuHandler;
 import org.apache.pivot.wtk.Mouse.Button;
 import org.apache.pivot.wtk.Prompt;
+import org.apache.pivot.wtk.TableView;
 import org.apache.pivot.wtk.content.ButtonData;
 import org.apache.pivot.wtk.media.Image;
 import org.apache.pivot.wtk.MovieView;
 import org.apache.pivot.wtk.Window;
 import org.apache.pivot.wtk.Label;
 import org.apache.pivot.xml.Element;
-
-import player.*;
 
 public class YoutubeMusicPlayer implements Application{
 	public static final String APPLICATION_KEY = "application";
@@ -75,6 +77,8 @@ public class YoutubeMusicPlayer implements Application{
 		bxmlSerializer.bind(this, YoutubeMusicPlayer.class);
 				
 		playlistList=new ArrayList<String>();
+		playlist=new HashMap<String,Playlist>();
+		musicList=new HashMap<String,java.util.List<Music>>();
 		
 		buttonActions();
 		loadCategories();
@@ -93,10 +97,18 @@ public class YoutubeMusicPlayer implements Application{
 		});
 		
 		window.open(display);
+		List<HashMap> list;
 		
-		//playerControl=PlayerFactory.createLightweightMPEG4Player();
-		//playerControl.open("/home/ilbay/workspace/YoutubeVideoPlayer/aaa.mp4");
-		//playerControl.start();
+		tableView.setTableData("[{no:'2',title:'Tugay',artist:'Mehmet'}]");
+		list=(List<HashMap>)tableView.getTableData();
+		for(HashMap s:list)
+			System.out.println(s);
+		HashMap<String,String> map=new HashMap<String,String>();
+		map.put("no","3");
+		map.put("title", "Yasemin");
+		map.put("genre", "Instrumental");
+		map.put("artist", "İnce");
+		list.add(map);
 	}
 
 	@Override
@@ -145,9 +157,13 @@ public class YoutubeMusicPlayer implements Application{
 	
 	private void loadCategories(){
 		playlistListView.setListData(playlistList);
-		java.util.List<String> list=PlaylistDB.getPlaylist();
-		for(String category:list)
-			playlistList.add(category);
+		java.util.List<Playlist> list=PlaylistDB.getPlaylist();
+		for(Playlist category:list){
+			playlistList.add(category.getName());
+			playlist.put(category.getName(), category);
+			java.util.List<Music> musics=MusicDB.getMusicList(category);
+			musicList.put(category.getName(), musics);
+		}
 	}
 	
 	private void createMenuActions(){
@@ -219,8 +235,9 @@ public class YoutubeMusicPlayer implements Application{
 	}
 	
 	private Window window;
-	private PlayerControl playerControl;
 	private List<String> playlistList;
+	private Map<String,Playlist> playlist;
+	private Map<String,java.util.List<Music>> musicList;
 	
 	private @BXML LinkButton playButton;
 	private @BXML LinkButton stopButton;
@@ -232,4 +249,5 @@ public class YoutubeMusicPlayer implements Application{
 	private @BXML ImportOnlineMediaDialog importOnlineMediaDialog;
 	
 	private @BXML ListView playlistListView;
+	private @BXML TableView tableView;
 }

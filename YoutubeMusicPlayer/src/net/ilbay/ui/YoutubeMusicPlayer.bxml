@@ -91,8 +91,6 @@
    										<TableView.Column name="artist" width="100" headerData="Artist"/>
    										<TableView.Column name="time" headerData="Time"/>
    									</columns>
-   								
-   									<collections:HashMap no="1" title="Bratja" artist="fma" time="04:11"/>
    								</TableView>
     								<columnHeader>
     									<TableViewHeader tableView="$tableView"/>

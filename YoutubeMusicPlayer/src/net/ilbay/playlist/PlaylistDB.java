@@ -20,16 +20,16 @@ public class PlaylistDB{
 		}
 	}
 	
-	public static List<String> getPlaylist(){
-		List<String> playList=new ArrayList<String>();
+	public static List<Playlist> getPlaylist(){
+		List<Playlist> playList=new ArrayList<Playlist>();
 		try {
 			if(conn==null)
 				connectToDatabase();
 			
 			Statement stat = conn.createStatement();
-			ResultSet resultSet=stat.executeQuery("select name from PLAYLIST");
+			ResultSet resultSet=stat.executeQuery("select id,name from PLAYLIST");
 			while(resultSet.next()){
-				playList.add(resultSet.getString("name"));
+				playList.add(new Playlist(resultSet.getInt("id"),resultSet.getString("name")));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

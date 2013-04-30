@@ -1,6 +1,21 @@
 package net.ilbay.playlist;
 
+import org.apache.pivot.collections.HashMap;
+
 public class Music{
+	public Music(){
+		
+	}
+	
+	public Music(HashMap<String,String> hashMap){
+		this.id=Integer.parseInt(hashMap.get("id"));
+		this.videoId=hashMap.get("videoId");
+		this.genre=hashMap.get("genre");
+		this.artist=hashMap.get("artist");
+		this.time=hashMap.get("time");
+		this.title=hashMap.get("title");
+	}
+	
 	public String getTitle(){
 		return title;
 	}
@@ -47,6 +62,17 @@ public class Music{
 
 	public void setVideoId(String videoId) {
 		this.videoId = videoId;
+	}
+	
+	public HashMap<String,String> toHashMap(){
+		HashMap<String,String> hashMap=new HashMap<String,String>();
+		hashMap.put("title",title);
+		hashMap.put("artist",artist);
+		hashMap.put("genre",genre);
+		hashMap.put("time",time.isEmpty() ? "00:00" : time);
+		hashMap.put("id", Integer.toString(id));
+		hashMap.put("videoId", videoId);
+		return hashMap;
 	}
 
 	private String title;
