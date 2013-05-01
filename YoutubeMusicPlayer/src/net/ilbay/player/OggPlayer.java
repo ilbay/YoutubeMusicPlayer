@@ -21,7 +21,7 @@ public class OggPlayer implements Player{
 	
 	public static void main(String args[]){
 		OggPlayer oggPlayer=new OggPlayer();
-		oggPlayer.initialize("/home/ilbay/Desktop/Example.ogg");
+		oggPlayer.initialize("/home/ilbay/git/YoutubeMusicPlayer/YoutubeMusicPlayer/music/tugay1.ogg");
 		System.out.println(oggPlayer.getTotalDuration());
 		oggPlayer.play();
 		try {
