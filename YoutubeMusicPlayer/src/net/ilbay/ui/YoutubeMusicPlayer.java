@@ -1,11 +1,13 @@
 package net.ilbay.ui;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import net.ilbay.listener.CategoryAdditionListener;
 import net.ilbay.listener.ConfirmationDialogListener;
+import net.ilbay.listener.ImportOnlineMediaListener;
 import net.ilbay.listener.RenamePlaylistDialogListener;
+import net.ilbay.player.OggPlayer;
+import net.ilbay.player.Player;
 import net.ilbay.playlist.Music;
 import net.ilbay.playlist.MusicDB;
 import net.ilbay.playlist.Playlist;
@@ -20,6 +22,7 @@ import org.apache.pivot.collections.ArrayList;
 import org.apache.pivot.collections.HashMap;
 import org.apache.pivot.collections.List;
 import org.apache.pivot.collections.Map;
+import org.apache.pivot.collections.Sequence;
 import org.apache.pivot.util.concurrent.TaskExecutionException;
 import org.apache.pivot.wtk.Alert;
 import org.apache.pivot.wtk.Application;
@@ -32,12 +35,15 @@ import org.apache.pivot.wtk.Display;
 import org.apache.pivot.wtk.ImageView;
 import org.apache.pivot.wtk.LinkButton;
 import org.apache.pivot.wtk.ListView;
+import org.apache.pivot.wtk.ListViewSelectionListener;
 import org.apache.pivot.wtk.Menu;
 import org.apache.pivot.wtk.MenuBar;
 import org.apache.pivot.wtk.MenuHandler;
 import org.apache.pivot.wtk.Mouse.Button;
 import org.apache.pivot.wtk.Prompt;
+import org.apache.pivot.wtk.Span;
 import org.apache.pivot.wtk.TableView;
+import org.apache.pivot.wtk.TableViewSelectionListener;
 import org.apache.pivot.wtk.content.ButtonData;
 import org.apache.pivot.wtk.media.Image;
 import org.apache.pivot.wtk.MovieView;
@@ -61,6 +67,7 @@ public class YoutubeMusicPlayer implements Application{
 		}
 		PlaylistDB.disconnectFromDatabase();
 		MusicDB.disconnectFromDatabase();
+		player.stop();
 		return false;
 	}
 
@@ -81,7 +88,7 @@ public class YoutubeMusicPlayer implements Application{
 		musicList=new HashMap<String,java.util.List<Music>>();
 		
 		buttonActions();
-		loadCategories();
+		loadPlaylists();
 		createContextMenuForCategory();
 		
 		newPlaylistDialog.addCategoryAdditionListener(new CategoryAdditionListener() {			
@@ -96,19 +103,75 @@ public class YoutubeMusicPlayer implements Application{
 			}
 		});
 		
-		window.open(display);
-		List<HashMap> list;
+		importOnlineMediaDialog.addImportOnlineMediaListener(new ImportOnlineMediaListener() {	
+			@Override
+			public void newMediaSaved(Music music) {
+				String playlistName=playlistListView.getSelectedItem().toString();
+				musicList.get(playlistName).add(music);
+				List<HashMap<String,String>> list=(List<HashMap<String,String>>)tableView.getTableData();
+				HashMap<String,String> map=music.toHashMap();
+				map.put("no", String.valueOf(list.getLength()+1));
+				list.add(map);
+			}
+		});
 		
-		tableView.setTableData("[{no:'2',title:'Tugay',artist:'Mehmet'}]");
-		list=(List<HashMap>)tableView.getTableData();
-		for(HashMap s:list)
-			System.out.println(s);
-		HashMap<String,String> map=new HashMap<String,String>();
-		map.put("no","3");
-		map.put("title", "Yasemin");
-		map.put("genre", "Instrumental");
-		map.put("artist", "İnce");
-		list.add(map);
+		playlistListView.getListViewSelectionListeners().add(new ListViewSelectionListener(){
+			@Override
+			public void selectedItemChanged(ListView arg0, Object arg1) {
+				showCurrentMusicList();
+			}
+
+			@Override
+			public void selectedRangeAdded(ListView arg0, int arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void selectedRangeRemoved(ListView arg0, int arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void selectedRangesChanged(ListView arg0, Sequence<Span> arg1) {
+			}
+		});
+		
+		tableView.getTableViewSelectionListeners().add(new TableViewSelectionListener(){
+			@Override
+			public void selectedRangeAdded(TableView arg0, int arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void selectedRangeRemoved(TableView arg0, int arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void selectedRangesChanged(TableView arg0,
+					Sequence<Span> arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void selectedRowChanged(TableView tableView, Object arg1) {
+				int selectedIndex=tableView.getSelectedIndex();
+				String playlistName=playlistListView.getSelectedItem().toString();
+				currentPlayingMusic=musicList.get(playlistName).get(selectedIndex);
+				player.initialize("music/"+currentPlayingMusic.getVideoId()+".ogg");
+				play();
+			}
+		});
+		
+		window.open(display);
+		
+		playlistListView.setSelectedIndex(0);
+		showCurrentMusicList();
 	}
 
 	@Override
@@ -117,27 +180,20 @@ public class YoutubeMusicPlayer implements Application{
 	}
 
 	private void buttonActions(){
+		
 		playButton.getComponentMouseButtonListeners().add(new ComponentMouseButtonListener(){
-			private boolean isToggled=true;
 			@Override
 			public boolean mouseClick(Component arg0, Button arg1, int arg2,
 					int arg3, int arg4) {
-				String iconURL="icon/button_grey_play.png";
-				if(isToggled)
-					iconURL="icon/button_grey_pause.png";
+				if(currentPlayingMusic==null)
+					return false;
 				
-				isToggled=!isToggled;
-				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-				URL imageURL=classLoader.getResource(iconURL);
-				Image image = (Image)ApplicationContext.getResourceCache().get(imageURL);
-				if(image==null){
-					try {
-						image=Image.load(imageURL);
-					} catch (TaskExecutionException e) {
-						e.printStackTrace();
-					}
-				}				
-				playButton.setButtonData(new ButtonData(image));
+				if(isPlaying)
+					pause();
+				else
+					play();
+				isPlaying=!isPlaying;
+				
 				return false;
 			}
 
@@ -155,7 +211,7 @@ public class YoutubeMusicPlayer implements Application{
 		});		
 	}
 	
-	private void loadCategories(){
+	private void loadPlaylists(){
 		playlistListView.setListData(playlistList);
 		java.util.List<Playlist> list=PlaylistDB.getPlaylist();
 		for(Playlist category:list){
@@ -163,6 +219,54 @@ public class YoutubeMusicPlayer implements Application{
 			playlist.put(category.getName(), category);
 			java.util.List<Music> musics=MusicDB.getMusicList(category);
 			musicList.put(category.getName(), musics);
+		}
+	}
+	
+	private void play(){
+		String iconURL="icon/button_grey_pause.png";
+		player.play();
+
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		URL imageURL=classLoader.getResource(iconURL);
+		Image image = (Image)ApplicationContext.getResourceCache().get(imageURL);
+		if(image==null){
+			try {
+				image=Image.load(imageURL);
+			} catch (TaskExecutionException e) {
+				e.printStackTrace();
+			}
+		}
+		playButton.setButtonData(new ButtonData(image));		
+	}
+	
+	private void pause(){
+		String iconURL="icon/button_grey_play.png";
+		player.pause();
+
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		URL imageURL=classLoader.getResource(iconURL);
+		Image image = (Image)ApplicationContext.getResourceCache().get(imageURL);
+		if(image==null){
+			try {
+				image=Image.load(imageURL);
+			} catch (TaskExecutionException e) {
+				e.printStackTrace();
+			}
+		}
+		playButton.setButtonData(new ButtonData(image));		
+	}
+	
+	private void showCurrentMusicList(){
+		List<HashMap<String,String>> tableData=(List<HashMap<String,String>>)tableView.getTableData();
+		tableData.clear();
+		
+		String playlistName=playlistListView.getSelectedItem().toString();
+		
+		java.util.List<Music> musics=musicList.get(playlistName);
+		for(int i=0;i<musics.size();i++){
+			HashMap<String,String> map=musics.get(i).toHashMap();
+			map.put("no", String.valueOf(i+1));
+			tableData.add(map);
 		}
 	}
 	
@@ -178,8 +282,8 @@ public class YoutubeMusicPlayer implements Application{
 		Action.getNamedActions().put("importOnlineMedia", new Action(){
 			@Override
 			public void perform(Component arg0) {
-				importOnlineMediaDialog.open(window);
-			}			
+				importOnlineMediaDialog.open(window,playlist.get(playlistListView.getSelectedItem().toString()));
+			}	
 		});
 	}
 	
@@ -238,6 +342,10 @@ public class YoutubeMusicPlayer implements Application{
 	private List<String> playlistList;
 	private Map<String,Playlist> playlist;
 	private Map<String,java.util.List<Music>> musicList;
+	
+	private Player player=new OggPlayer();
+	private Music currentPlayingMusic=null;
+	private boolean isPlaying=false;
 	
 	private @BXML LinkButton playButton;
 	private @BXML LinkButton stopButton;

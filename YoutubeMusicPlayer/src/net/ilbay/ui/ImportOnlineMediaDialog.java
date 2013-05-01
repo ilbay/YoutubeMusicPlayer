@@ -1,12 +1,16 @@
 package net.ilbay.ui;
 
+import java.io.File;
 import java.net.URL;
 
+import net.ilbay.converter.Converter;
 import net.ilbay.downloader.Downloader;
 import net.ilbay.downloader.VideoInfo;
 import net.ilbay.downloader.YoutubeVideoDownloader;
 import net.ilbay.listener.ImportOnlineMediaListener;
+import net.ilbay.player.OggPlayer;
 import net.ilbay.playlist.Music;
+import net.ilbay.playlist.MusicDB;
 import net.ilbay.playlist.Playlist;
 
 import org.apache.pivot.beans.BXML;
@@ -61,7 +65,7 @@ public class ImportOnlineMediaDialog extends Dialog implements Bindable{
 						@Override
 						public void taskExecuted(Task<String> arg0) {
 							changeInputState(true);
-							titleTextInput.setText(arg0.getResult());
+							titleTextInput.setText(arg0.getResult()==null ? "" : arg0.getResult());
 							activityIndicator.setActive(false);
 							musicInfoBorder.setVisible(true);
 						}
@@ -88,7 +92,18 @@ public class ImportOnlineMediaDialog extends Dialog implements Bindable{
 				Task<String> saveVideoTask=new Task<String>(){
 					@Override
 					public String execute() throws TaskExecutionException {
-						downloader.saveVideo();
+						String savedFile=downloader.saveVideo();
+						String convertedFile=Converter.convertToOgg(savedFile);
+						new File(savedFile).delete();
+						OggPlayer oggPlayer=new OggPlayer();
+						oggPlayer.initialize(convertedFile);
+						
+						music.setTime(convertSeconds(oggPlayer.getTotalDuration()));
+						MusicDB.addMusic(playlist, music);
+						
+						if(importOnlineMediaListener!=null)
+							importOnlineMediaListener.newMediaSaved(music);
+						
 						return null;
 					}
 				};
@@ -96,16 +111,14 @@ public class ImportOnlineMediaDialog extends Dialog implements Bindable{
 				TaskListener<String> taskListener=new TaskListener<String>(){
 					@Override
 					public void executeFailed(Task<String> arg0) {
-						activityIndicator.setActive(false);
-						close();
 						//TODO: An error message should be displayed.
+						closeWindow();
 					}
 
 					@Override
 					public void taskExecuted(Task<String> arg0) {
-						activityIndicator.setActive(false);
-						close();						
 						//importOnlineMediaListener.newMediaSaved(music);
+						closeWindow();
 					}
 				};
 				
@@ -120,7 +133,19 @@ public class ImportOnlineMediaDialog extends Dialog implements Bindable{
 	
 	public void open(Window window,Playlist playlist){
 		this.playlist=playlist;
+		activityIndicator.setActive(false);
+		changeInputState(true);
+		musicInfoBorder.setVisible(false);
+		titleTextInput.clear();
+		videoIdTextInput.clear();
 		open(window);
+	}
+	
+	public void closeWindow(){
+		activityIndicator.setActive(false);
+		changeInputState(true);
+		musicInfoBorder.setVisible(false);
+		close();
 	}
 	
 	private void changeInputState(boolean isEnabled){
@@ -130,6 +155,20 @@ public class ImportOnlineMediaDialog extends Dialog implements Bindable{
 		artistTextInput.setEnabled(isEnabled);
 		genreTextInput.setEnabled(isEnabled);
 		saveButton.setEnabled(isEnabled);
+	}
+	
+	private String convertSeconds(long time){
+		String ss="";
+
+		while(time>0){
+			if(!ss.equals(""))
+				ss=":"+ss;
+			String temp=String.valueOf(time%60);
+			ss=(temp.length()%2!=0 ? "0"+temp : temp)+ss;
+			time=(long)Math.floor(time/60);
+		}
+				
+		return ss;
 	}
 	
 	private ImportOnlineMediaListener importOnlineMediaListener;

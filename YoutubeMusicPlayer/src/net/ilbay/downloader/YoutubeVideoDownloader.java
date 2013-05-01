@@ -39,8 +39,8 @@ import org.apache.http.protocol.HttpContext;
 
 public class YoutubeVideoDownloader implements Downloader{
 	public static void main(String[] args){
-		YoutubeVideoDownloader yvd=new YoutubeVideoDownloader("VnfpsVpUw4A");
-		yvd.getVideoInfo();
+		YoutubeVideoDownloader yvd=new YoutubeVideoDownloader("vYV-XJdzupY");
+		System.out.println(yvd.getVideoInfo().getVideoTitle());
 		//yvd.saveVideo();
 	}
 	
@@ -116,7 +116,7 @@ public class YoutubeVideoDownloader implements Downloader{
 		return resultVideoInfo;
 	}
 	
-	public void saveVideo(){
+	public String saveVideo(){
 		try{
 			CookieStore cookieStore = new BasicCookieStore();
 			HttpContext localContext = new BasicHttpContext();
@@ -150,6 +150,8 @@ public class YoutubeVideoDownloader implements Downloader{
 				
 				fileOutputStream.flush();
 				fileOutputStream.close();
+				
+				return file.toString();
 			}
 		}catch(FileNotFoundException e){
 			e.printStackTrace();
@@ -160,6 +162,8 @@ public class YoutubeVideoDownloader implements Downloader{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+		
+		return null;
 	}
 	
 	private URI createURL(String videoId) throws URISyntaxException, UnsupportedEncodingException{

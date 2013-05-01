@@ -28,7 +28,7 @@ public class MusicDB {
 				connectToDatabase();
 			
 			Statement stat = conn.createStatement();
-			ResultSet resultSet=stat.executeQuery("select * from MUSIC,PLAYLIST_MUSIC WHERE playlistId="+playlist.getId());
+			ResultSet resultSet=stat.executeQuery("select * from MUSIC,PLAYLIST_MUSIC WHERE playlistId="+playlist.getId()+" AND MUSIC.id=PLAYLIST_MUSIC.musicId");
 			while(resultSet.next()){
 				Music music=new Music();
 				music.setTitle(resultSet.getString("title"));
