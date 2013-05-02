@@ -60,8 +60,8 @@
     				</LinkButton>
     				<BoxPane orientation="vertical" styles="{verticalAlignment:'center',horizontalAlignment:'center'}">
     					<Label/>
-    					<Slider value="0"/>
-    					<Label text="tugay"/>
+    					<Slider bxml:id="timeSlider" value="0"/>
+    					<Label bxml:id="currentTimeLabel" text=""/>
     				</BoxPane>
     				<LinkButton bxml:id="soundButton">
     					<content:ButtonData icon="/icon/sound.png"/>

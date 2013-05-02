@@ -3,7 +3,6 @@ package net.ilbay.ui;
 import java.io.File;
 import java.net.URL;
 
-import net.ilbay.converter.Converter;
 import net.ilbay.downloader.Downloader;
 import net.ilbay.downloader.VideoInfo;
 import net.ilbay.downloader.YoutubeVideoDownloader;
@@ -12,6 +11,8 @@ import net.ilbay.player.OggPlayer;
 import net.ilbay.playlist.Music;
 import net.ilbay.playlist.MusicDB;
 import net.ilbay.playlist.Playlist;
+import net.ilbay.util.Converter;
+import net.ilbay.util.PlayerTime;
 
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.Bindable;
@@ -98,7 +99,7 @@ public class ImportOnlineMediaDialog extends Dialog implements Bindable{
 						OggPlayer oggPlayer=new OggPlayer();
 						oggPlayer.initialize(convertedFile);
 						
-						music.setTime(convertSeconds(oggPlayer.getTotalDuration()));
+						music.setTime(PlayerTime.convertSeconds(oggPlayer.getTotalDuration()));
 						MusicDB.addMusic(playlist, music);
 						
 						if(importOnlineMediaListener!=null)
@@ -155,20 +156,6 @@ public class ImportOnlineMediaDialog extends Dialog implements Bindable{
 		artistTextInput.setEnabled(isEnabled);
 		genreTextInput.setEnabled(isEnabled);
 		saveButton.setEnabled(isEnabled);
-	}
-	
-	private String convertSeconds(long time){
-		String ss="";
-
-		while(time>0){
-			if(!ss.equals(""))
-				ss=":"+ss;
-			String temp=String.valueOf(time%60);
-			ss=(temp.length()%2!=0 ? "0"+temp : temp)+ss;
-			time=(long)Math.floor(time/60);
-		}
-				
-		return ss;
 	}
 	
 	private ImportOnlineMediaListener importOnlineMediaListener;

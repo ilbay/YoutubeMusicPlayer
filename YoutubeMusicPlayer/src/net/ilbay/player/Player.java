@@ -1,5 +1,7 @@
 package net.ilbay.player;
 
+import net.ilbay.listener.PlayingMusicListener;
+
 public interface Player {
 	public void initialize(String filename);
 	public void play();
@@ -10,4 +12,5 @@ public interface Player {
 	public float getVolume();
 	public long getTotalDuration();
 	public long getCurrentDuration();
+	public void addPlayingMusicListener(PlayingMusicListener playingMusicListener);
 }

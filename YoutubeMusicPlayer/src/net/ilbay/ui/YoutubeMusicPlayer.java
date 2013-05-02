@@ -5,6 +5,7 @@ import java.net.URL;
 import net.ilbay.listener.CategoryAdditionListener;
 import net.ilbay.listener.ConfirmationDialogListener;
 import net.ilbay.listener.ImportOnlineMediaListener;
+import net.ilbay.listener.PlayingMusicListener;
 import net.ilbay.listener.RenamePlaylistDialogListener;
 import net.ilbay.player.OggPlayer;
 import net.ilbay.player.Player;
@@ -14,6 +15,8 @@ import net.ilbay.playlist.Playlist;
 import net.ilbay.playlist.PlaylistDB;
 import net.ilbay.ui.playlistdialog.NewPlaylistDialog;
 import net.ilbay.ui.playlistdialog.RenamePlaylistDialog;
+import net.ilbay.util.Converter;
+import net.ilbay.util.PlayerTime;
 
 import org.apache.pivot.wtk.Action;
 import org.apache.pivot.beans.BXML;
@@ -41,6 +44,7 @@ import org.apache.pivot.wtk.MenuBar;
 import org.apache.pivot.wtk.MenuHandler;
 import org.apache.pivot.wtk.Mouse.Button;
 import org.apache.pivot.wtk.Prompt;
+import org.apache.pivot.wtk.Slider;
 import org.apache.pivot.wtk.Span;
 import org.apache.pivot.wtk.TableView;
 import org.apache.pivot.wtk.TableViewSelectionListener;
@@ -51,7 +55,7 @@ import org.apache.pivot.wtk.Window;
 import org.apache.pivot.wtk.Label;
 import org.apache.pivot.xml.Element;
 
-public class YoutubeMusicPlayer implements Application{
+public class YoutubeMusicPlayer implements Application,PlayingMusicListener{
 	public static final String APPLICATION_KEY = "application";
 	
 	@Override
@@ -86,6 +90,8 @@ public class YoutubeMusicPlayer implements Application{
 		playlistList=new ArrayList<String>();
 		playlist=new HashMap<String,Playlist>();
 		musicList=new HashMap<String,java.util.List<Music>>();
+		player=new OggPlayer();
+		player.addPlayingMusicListener(this);
 		
 		buttonActions();
 		loadPlaylists();
@@ -160,9 +166,9 @@ public class YoutubeMusicPlayer implements Application{
 
 			@Override
 			public void selectedRowChanged(TableView tableView, Object arg1) {
-				int selectedIndex=tableView.getSelectedIndex();
+				currentPlayingMusicIndex=tableView.getSelectedIndex();
 				String playlistName=playlistListView.getSelectedItem().toString();
-				currentPlayingMusic=musicList.get(playlistName).get(selectedIndex);
+				currentPlayingMusic=musicList.get(playlistName).get(currentPlayingMusicIndex);
 				player.initialize("music/"+currentPlayingMusic.getVideoId()+".ogg");
 				play();
 			}
@@ -179,6 +185,42 @@ public class YoutubeMusicPlayer implements Application{
 		// TODO Auto-generated method stub
 	}
 
+	public void finished(){
+		int selectedPlaylistIndex=playlistListView.getSelectedIndex();
+		String selectedPlaylistName=playlistList.get(selectedPlaylistIndex);
+		java.util.List<Music> musics=musicList.get(selectedPlaylistName);
+		if(musics.size()>currentPlayingMusicIndex+1){
+			currentPlayingMusicIndex++;
+			currentPlayingMusic=musics.get(currentPlayingMusicIndex);
+			//tableView.setSelectedIndex(currentPlayingMusicIndex);
+			player.initialize("music/"+currentPlayingMusic.getVideoId()+".ogg");
+			ApplicationContext.queueCallback(new Runnable(){
+				@Override
+				public void run() {
+					tableView.setSelectedIndex(currentPlayingMusicIndex);
+					//play();
+				}
+			});
+		}else{
+			ApplicationContext.queueCallback(new Runnable() {
+				@Override
+				public void run() {
+					pause();
+				}
+			});
+		}
+	}
+	
+	public void currentTime(final long microseconds){
+		ApplicationContext.queueCallback(new Runnable() {			
+			@Override
+			public void run(){
+				long second=(long)Math.round(microseconds/1000000);
+				currentTimeLabel.setText(PlayerTime.convertSeconds(second));
+			}
+		});
+	}
+	
 	private void buttonActions(){
 		
 		playButton.getComponentMouseButtonListeners().add(new ComponentMouseButtonListener(){
@@ -192,7 +234,6 @@ public class YoutubeMusicPlayer implements Application{
 					pause();
 				else
 					play();
-				isPlaying=!isPlaying;
 				
 				return false;
 			}
@@ -225,6 +266,8 @@ public class YoutubeMusicPlayer implements Application{
 	private void play(){
 		String iconURL="icon/button_grey_pause.png";
 		player.play();
+		
+		isPlaying=true;
 
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		URL imageURL=classLoader.getResource(iconURL);
@@ -243,6 +286,8 @@ public class YoutubeMusicPlayer implements Application{
 		String iconURL="icon/button_grey_play.png";
 		player.pause();
 
+		isPlaying=false;
+		
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		URL imageURL=classLoader.getResource(iconURL);
 		Image image = (Image)ApplicationContext.getResourceCache().get(imageURL);
@@ -343,13 +388,17 @@ public class YoutubeMusicPlayer implements Application{
 	private Map<String,Playlist> playlist;
 	private Map<String,java.util.List<Music>> musicList;
 	
-	private Player player=new OggPlayer();
+	private Player player;
 	private Music currentPlayingMusic=null;
+	private int currentPlayingMusicIndex=-1;
 	private boolean isPlaying=false;
 	
 	private @BXML LinkButton playButton;
 	private @BXML LinkButton stopButton;
 	private @BXML LinkButton soundButton;
+	
+	private @BXML Label currentTimeLabel;
+	private @BXML Slider timeSlider;
 	
 	private @BXML NewPlaylistDialog newPlaylistDialog;	
 	private @BXML ConfirmationDialog confirmationDialog;

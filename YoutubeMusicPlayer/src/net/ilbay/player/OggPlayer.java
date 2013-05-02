@@ -14,6 +14,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import net.ilbay.listener.PlayingMusicListener;
+
 import org.tritonus.share.sampled.file.TAudioFileFormat;
 
 
@@ -103,10 +105,15 @@ public class OggPlayer implements Player{
 		return volume;
 	}
 	
+	public void addPlayingMusicListener(PlayingMusicListener playingMusicListener){
+		this.playingMusicListener=playingMusicListener;
+	}
+	
 	private OggPlayerThread oggPlayerThread=null;
 	private String filename;
 	private long totalDuration;
 	private float volume=100f;
+	private PlayingMusicListener playingMusicListener;
 	
 	private class OggPlayerThread extends Thread{
 		
@@ -218,6 +225,9 @@ public class OggPlayer implements Player{
 				line.stop();
 				line.close();
 				din.close();
+				
+				if(playingMusicListener!=null && !isStopped)
+					playingMusicListener.finished();
 			}
 		}
 
