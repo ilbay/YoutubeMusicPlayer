@@ -47,7 +47,7 @@ public class OggPlayer implements Player{
 			AudioFileFormat baseFileFormat = AudioSystem.getAudioFileFormat(file);
 			if (baseFileFormat instanceof TAudioFileFormat){
 				Map props = ((TAudioFileFormat)baseFileFormat).properties();
-				totalDuration = (long) Math.ceil((((Long)props.get("duration")).longValue())/1000000);
+				totalDuration = ((Long)props.get("duration")).longValue();
 			}
 		}catch(IOException ex){
 			ex.printStackTrace();
@@ -215,6 +215,8 @@ public class OggPlayer implements Player{
 					
 					nBytesRead = din.read(data, 0, data.length);
 					if (nBytesRead != -1) nBytesWritten = line.write(data, 0, nBytesRead);
+					
+					playingMusicListener.currentTime(line.getMicrosecondPosition());
 					
 					synchronized (currentDurationLock) {
 						currentDuration=line.getMicrosecondPosition();

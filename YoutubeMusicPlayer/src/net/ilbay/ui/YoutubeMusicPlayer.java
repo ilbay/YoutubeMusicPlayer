@@ -215,8 +215,7 @@ public class YoutubeMusicPlayer implements Application,PlayingMusicListener{
 		ApplicationContext.queueCallback(new Runnable() {			
 			@Override
 			public void run(){
-				long second=(long)Math.round(microseconds/1000000);
-				currentTimeLabel.setText(PlayerTime.convertSeconds(second));
+				timeSlider.setValue(Math.round(microseconds/1000000));
 			}
 		});
 	}
@@ -266,6 +265,9 @@ public class YoutubeMusicPlayer implements Application,PlayingMusicListener{
 	private void play(){
 		String iconURL="icon/button_grey_pause.png";
 		player.play();
+		
+		currentTimeLabel.setText(currentPlayingMusic.getTime());
+		timeSlider.setRange(0, Math.round(player.getTotalDuration()/1000000));
 		
 		isPlaying=true;
 

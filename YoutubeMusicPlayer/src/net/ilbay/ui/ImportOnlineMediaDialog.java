@@ -99,7 +99,7 @@ public class ImportOnlineMediaDialog extends Dialog implements Bindable{
 						OggPlayer oggPlayer=new OggPlayer();
 						oggPlayer.initialize(convertedFile);
 						
-						music.setTime(PlayerTime.convertSeconds(oggPlayer.getTotalDuration()));
+						music.setTime(PlayerTime.convertSeconds(Math.round(oggPlayer.getTotalDuration()/1000000)));
 						MusicDB.addMusic(playlist, music);
 						
 						if(importOnlineMediaListener!=null)
