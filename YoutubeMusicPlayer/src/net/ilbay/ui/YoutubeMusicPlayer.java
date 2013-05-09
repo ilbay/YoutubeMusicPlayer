@@ -93,6 +93,8 @@ public class YoutubeMusicPlayer implements Application,PlayingMusicListener{
 		player=new OggPlayer();
 		player.addPlayingMusicListener(this);
 		
+		timeSlider.setEnabled(false);
+		
 		buttonActions();
 		loadPlaylists();
 		createContextMenuForCategory();
@@ -248,7 +250,31 @@ public class YoutubeMusicPlayer implements Application,PlayingMusicListener{
 					int arg3) {
 				return false;
 			}
-		});		
+		});
+		
+		stopButton.getComponentMouseButtonListeners().add(new ComponentMouseButtonListener(){
+			@Override
+			public boolean mouseClick(Component arg0, Button arg1, int arg2,
+					int arg3, int arg4) {
+				stop();
+				return false;
+			}
+
+			@Override
+			public boolean mouseDown(Component arg0, Button arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean mouseUp(Component arg0, Button arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+		});
 	}
 	
 	private void loadPlaylists(){
@@ -268,6 +294,7 @@ public class YoutubeMusicPlayer implements Application,PlayingMusicListener{
 		
 		currentTimeLabel.setText(currentPlayingMusic.getTime());
 		timeSlider.setRange(0, Math.round(player.getTotalDuration()/1000000));
+		timeSlider.setValue(0);
 		
 		isPlaying=true;
 
@@ -301,6 +328,26 @@ public class YoutubeMusicPlayer implements Application,PlayingMusicListener{
 			}
 		}
 		playButton.setButtonData(new ButtonData(image));		
+	}
+	
+	private void stop(){
+		String iconURL="icon/button_grey_play.png";
+		player.stop();
+
+		isPlaying=false;
+		
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		URL imageURL=classLoader.getResource(iconURL);
+		Image image = (Image)ApplicationContext.getResourceCache().get(imageURL);
+		if(image==null){
+			try {
+				image=Image.load(imageURL);
+			} catch (TaskExecutionException e) {
+				e.printStackTrace();
+			}
+		}
+		playButton.setButtonData(new ButtonData(image));
+		timeSlider.setValue(0);
 	}
 	
 	private void showCurrentMusicList(){
